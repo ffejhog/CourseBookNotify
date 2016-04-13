@@ -1,16 +1,24 @@
 package com.jeffreyneer.coursebooknotify;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class AddClass_Activity extends AppCompatActivity {
 
@@ -23,6 +31,15 @@ public class AddClass_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_addclass);
 
 
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<Semester_Spinner_Object> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getSemesterList());
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_semester);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+
     }
 
     public void searchForClassPercent(View view){
@@ -30,11 +47,12 @@ public class AddClass_Activity extends AppCompatActivity {
         EditText schoolName = (EditText) findViewById(R.id.editText_school);
         EditText classNumber = (EditText) findViewById(R.id.editText_classnumber);
         EditText sectionNumber = (EditText) findViewById(R.id.editText_sectionnumber);
-        EditText semester = (EditText) findViewById(R.id.editText_semester);
+        Spinner semester = (Spinner) findViewById(R.id.spinner_semester);
 
-
+        TextView percentOutTextView = (TextView) findViewById(R.id.textView_PercentOutput);
         CourseBookLookup cbLookup = new CourseBookLookup();
-        cbLookup.execute(schoolName.getText().toString(),classNumber.getText().toString(),sectionNumber.getText().toString(),semester.getText().toString());
+        Semester_Spinner_Object semester_selected = (Semester_Spinner_Object) ((Spinner) findViewById(R.id.spinner_semester)).getSelectedItem();
+        cbLookup.execute(schoolName.getText().toString(),classNumber.getText().toString(),sectionNumber.getText().toString(),semester_selected.getNameCode());
 
 
     }
@@ -69,13 +87,13 @@ public class AddClass_Activity extends AppCompatActivity {
             int sizeOfCheckBeforeHTML = Pagedata.indexOf(checkBeforeHTML);
             if (sizeOfCheckBeforeHTML < 0) {
                 System.out.println("Class does not exist");
-                return "ERROR";
+                return "Class does not exist";
             }
             String HTMLAfterCheckBeforeHTML = Pagedata.substring(sizeOfCheckBeforeHTML + checkBeforeHTML.length());
             int sizeOfHTMLAfterCheckBeforeHTML = HTMLAfterCheckBeforeHTML.indexOf(checkAfterHTML);
             if (sizeOfHTMLAfterCheckBeforeHTML < 0) {
                 System.out.println("Class does not exist");
-                return "ERROR";
+                return "Class does not exist";
             }
 
             //TODO: Remove redundancy after class is tested
@@ -94,5 +112,21 @@ public class AddClass_Activity extends AppCompatActivity {
 
     }
 
+    List<Semester_Spinner_Object> getSemesterList(){
+        String[] semestersNames = getResources().getStringArray(R.array.semester_array_names);
+        String[] semestersNamecodes = getResources().getStringArray(R.array.semester_array_name_Codes);
+
+        ArrayList<Semester_Spinner_Object> semesterObjectList = new ArrayList<>();
+
+        for(int i =0; i< semestersNames.length;i++) {
+
+            semesterObjectList.add(new Semester_Spinner_Object(semestersNames[i],semestersNamecodes[i]));
+        }
+        return semesterObjectList;
+    }
+
 
 }
+
+
+

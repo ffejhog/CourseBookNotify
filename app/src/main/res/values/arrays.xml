@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="semester_array_name_Codes">
+        <item>15s</item>
+        <item>15u</item>
+        <item>15f</item>
+        <item>16s</item>
+        <item>16u</item>
+        <item>16f</item>
+    </string-array>
+
+    <string-array name="semester_array_names">
+        <item>Spring 2015</item>
+        <item>Summer 2015</item>
+        <item>Fall 2015</item>
+        <item>Spring 2016</item>
+        <item>Summer 2016</item>
+        <item>Fall 2016</item>
+    </string-array>
+</resources>
