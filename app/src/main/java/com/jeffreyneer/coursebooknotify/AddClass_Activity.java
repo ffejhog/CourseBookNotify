@@ -1,5 +1,6 @@
 package com.jeffreyneer.coursebooknotify;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +20,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 public class AddClass_Activity extends AppCompatActivity {
+    public final String DATABASE = "database";
 
 
 
@@ -47,7 +50,7 @@ public class AddClass_Activity extends AppCompatActivity {
         EditText schoolName = (EditText) findViewById(R.id.editText_school);
         EditText classNumber = (EditText) findViewById(R.id.editText_classnumber);
         EditText sectionNumber = (EditText) findViewById(R.id.editText_sectionnumber);
-        Spinner semester = (Spinner) findViewById(R.id.spinner_semester);
+
 
         TextView percentOutTextView = (TextView) findViewById(R.id.textView_PercentOutput);
         CourseBookLookup cbLookup = new CourseBookLookup();
@@ -106,8 +109,27 @@ public class AddClass_Activity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             TextView percentOutTextView = (TextView) findViewById(R.id.textView_PercentOutput);
             percentOutTextView.setText(result); // txt.setText(result);
+
+            EditText schoolName = (EditText) findViewById(R.id.editText_school);
+            EditText classNumber = (EditText) findViewById(R.id.editText_classnumber);
+            EditText sectionNumber = (EditText) findViewById(R.id.editText_sectionnumber);
+            Semester_Spinner_Object semester_selected = (Semester_Spinner_Object) ((Spinner) findViewById(R.id.spinner_semester)).getSelectedItem();
+
+            SharedPreferences database = getSharedPreferences(DATABASE, 0);
+            int numOfClasses = database.getInt("total_classes", 0);
+            SharedPreferences.Editor databaseEditor = database.edit();
+            databaseEditor.putInt("total_classes", numOfClasses+1);
+            String test1 = "class_" + (numOfClasses+1) +"_school";
+
+
+            databaseEditor.putString("class_" + (numOfClasses+1) +"_cNumber", classNumber.getText().toString());
+            databaseEditor.putString("class_" + (numOfClasses+1) +"_sNumber", sectionNumber.getText().toString());
+            databaseEditor.putString("class_" + (numOfClasses+1) +"_semester", semester_selected.getNameCode());
             // might want to change "executed" for the returned string passed
             // into onPostExecute() but that is upto you
+            databaseEditor.apply();
+
+
         }
 
     }
