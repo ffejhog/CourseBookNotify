@@ -1,30 +1,24 @@
 language: android
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    - platform-tools
-    - tools
-
-    # The BuildTools version used by your project
-    - build-tools-23.0.3
-
-    # The SDK version used to compile your project
-    - android-23
-
-    # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-23
-
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-    #- sys-img-armeabi-v7a-android-19
-    #- sys-img-x86-android-17
+  - platform-tools
+  - tools
+  - build-tools-23.0.3
+  - android-23
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-23
 before_install:
- - chmod +x gradlew
- 
-script: 
- - ./gradlew clean build
- 
+- chmod +x gradlew
+script:
+- "./gradlew clean build"
+deploy:
+  provider: releases
+  api_key:
+    secure: DX1QoaAnO0JPM8dDMHxK5EOpc3we+k0wUVpV3FqC0jTQxdkTRAYkTnGWU5pufO4G6T33ZY3b2ZVdYqWT38DB52IQp0UPE9oGA0BsExYpthZhHwpj6+ZjHT1eiLp8saZxgX9EBATpwL0njpgyaeAm3Y+BQqal0VD9z0xoeSqYviMo21ppVP43LFJRkP/OqfpNuUhx/xjrirRZNz3fthiZzqW9R8CedUEHDax+mFzw+o4g75f77dhFen6EFUXBe/CdQsOVZUVGNyypQ0jbsVgmMmBdGbm3YQFcBsBqI7S3W5LSpQqvc5iT0R75eJkflQWxt9ve8ZN2JzBUWI9uglBP15JJwlpnF6p8eB2jmRvce6HU9jTjE9xv2TapZOUYqFNSEoWBl4dOfn0/VnBP/UHa9BgICVCFnqmQBX593wsLgpnb9O7mJwywWccUn+j+YwxiKrRRT3L6+3D26aBba/aM4qumj8AUvdWq+UDe5cThnF5BI8/aXFPV2eoI9BdmeqNNrSJPc3APmTnbt/tt9UusNyHrNVhXgTQizM73GkZEsLSXDhtEd7QWq+NyUk81ZJBHKB6es+Om7pDPYBVKtau9DLirwI1UySJxU8qZViYCWSpxrxTZ7DWd1VJEEOwmM6vDy2HizrKCuZrl8omiZhcbGucJNjaMBpy3bWuyFwgZSh8=
+  file: app/build/outputs/apk/app-debug.apk
+  on:
+    repo: ffejhog/CourseBookNotify
+    tags: true
+
