@@ -17,6 +17,7 @@
     <style name="Theme.AppTheme.Light.Green" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="colorPrimaryDark">@color/button_material_light</item>
         <item name="colorPrimary">@color/accent_material_light</item>
+        <item name="android:colorBackground">@color/background_material_light</item>
     </style>
 
 </resources>
