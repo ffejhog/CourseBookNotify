@@ -1,6 +1,7 @@
 package com.jeffreyneer.coursebooknotify;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -19,9 +20,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final String DATABASE = "database";
+    static final int OPEN_NEW_CLASS = 1;
+    SharedPreferences database;
     ArrayList<SchoolClass> schoolClasses = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
+    SchoolClass_Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,24 +33,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        database = getSharedPreferences(DATABASE, 0);
         RecyclerView rvSchoolClass = (RecyclerView) findViewById(R.id.mainList);
 
+
+        int numOfClasses = database.getInt("total_classes", 0);
+        for(int i = 1; i< numOfClasses+1; i++){
+            schoolClasses.add(new SchoolClass(
+                    database.getString("class_" + i +"_school", ""),
+                    database.getString("class_" + i +"_cNumber", ""),
+                    database.getString("class_" + i +"_sNumber", ""),
+                    database.getString("class_" + i +"_semester", ""),
+                    database.getString("class_" + i +"_filled", "")));
+        }
+
         //Init School items
-        schoolClasses.add(new SchoolClass("lit", "3317", "002", "16f", "100% Filled"));
-        schoolClasses.add(new SchoolClass("cs", "1234", "001", "16f", "75% Filled"));
-        schoolClasses.add(new SchoolClass("se", "5645", "003", "17s", "80% Filled"));
-        schoolClasses.add(new SchoolClass("mech", "5783", "501", "17s", "15% Filled"));
-        schoolClasses.add(new SchoolClass("atec", "4534", "502", "16f", "45% Filled"));
-        schoolClasses.add(new SchoolClass("mkt", "4534", "H02", "16f", "78% Filled"));
-        schoolClasses.add(new SchoolClass("opre", "7864", "654", "16f", "78% Filled"));
-        schoolClasses.add(new SchoolClass("mis", "7835", "785", "16f", "78% Filled"));
-        schoolClasses.add(new SchoolClass("bis", "4537", "002", "16f", "45% Filled"));
-        schoolClasses.add(new SchoolClass("ecs", "7853", "001", "16f", "53% Filled"));
 
-
-
-        SchoolClass_Adapter adapter = new SchoolClass_Adapter(schoolClasses);
+        adapter = new SchoolClass_Adapter(schoolClasses);
 
         rvSchoolClass.setAdapter(adapter);
 
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openAddClass_Activity(View view){
         Intent intent = new Intent(this, AddClass_Activity.class);
-        startActivity(intent);
+        startActivityForResult(intent, OPEN_NEW_CLASS);
     }
 
     @Override
@@ -92,6 +95,28 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
+    public void onResume(){
+        this.adapter.notifyDataSetChanged();
+        super.onResume();
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == OPEN_NEW_CLASS) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<SchoolClass> newschoolClasses = new ArrayList<>();
+                int numOfClasses = database.getInt("total_classes", 0);
+                for(int i = 1; i< numOfClasses+1; i++){
+                    newschoolClasses.add(new SchoolClass(
+                            database.getString("class_" + i +"_school", ""),
+                            database.getString("class_" + i +"_cNumber", ""),
+                            database.getString("class_" + i +"_sNumber", ""),
+                            database.getString("class_" + i +"_semester", ""),
+                            database.getString("class_" + i +"_filled", "")));
+                }
+                schoolClasses.clear();
+                schoolClasses.addAll(newschoolClasses);
+                this.adapter.notifyDataSetChanged();
+            }
+        }
+    }
 }

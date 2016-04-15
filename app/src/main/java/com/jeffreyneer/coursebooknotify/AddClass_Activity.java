@@ -1,5 +1,6 @@
 package com.jeffreyneer.coursebooknotify;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -21,10 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class AddClass_Activity extends AppCompatActivity {
     public final String DATABASE = "database";
-
+    public boolean fail = false;
 
 
 
@@ -55,8 +57,20 @@ public class AddClass_Activity extends AppCompatActivity {
         TextView percentOutTextView = (TextView) findViewById(R.id.textView_PercentOutput);
         CourseBookLookup cbLookup = new CourseBookLookup();
         Semester_Spinner_Object semester_selected = (Semester_Spinner_Object) ((Spinner) findViewById(R.id.spinner_semester)).getSelectedItem();
-        cbLookup.execute(schoolName.getText().toString(),classNumber.getText().toString(),sectionNumber.getText().toString(),semester_selected.getNameCode());
+        cbLookup.execute(schoolName.getText().toString().toLowerCase(),classNumber.getText().toString(),sectionNumber.getText().toString(),semester_selected.getNameCode());
+        try {
+            cbLookup.get();
+            if (fail) {
+                percentOutTextView.setText("Class not found");
+                fail = false;
+            } else {
+                Intent intent = this.getIntent();
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        }catch (Exception e){
 
+        }
 
     }
 
@@ -89,14 +103,14 @@ public class AddClass_Activity extends AppCompatActivity {
             String checkAfterHTML = "\"></div> </td><td style=\"text-align: center;\">";
             int sizeOfCheckBeforeHTML = Pagedata.indexOf(checkBeforeHTML);
             if (sizeOfCheckBeforeHTML < 0) {
-                System.out.println("Class does not exist");
-                return "Class does not exist";
+                fail=true;
+                return "NULL";
             }
             String HTMLAfterCheckBeforeHTML = Pagedata.substring(sizeOfCheckBeforeHTML + checkBeforeHTML.length());
             int sizeOfHTMLAfterCheckBeforeHTML = HTMLAfterCheckBeforeHTML.indexOf(checkAfterHTML);
             if (sizeOfHTMLAfterCheckBeforeHTML < 0) {
-                System.out.println("Class does not exist");
-                return "Class does not exist";
+                fail=true;
+                return "NULL";
             }
 
             //TODO: Remove redundancy after class is tested
@@ -107,8 +121,11 @@ public class AddClass_Activity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            TextView percentOutTextView = (TextView) findViewById(R.id.textView_PercentOutput);
-            percentOutTextView.setText(result); // txt.setText(result);
+
+             // txt.setText(result);
+            if(result=="NULL"){
+                return;
+            }
 
             EditText schoolName = (EditText) findViewById(R.id.editText_school);
             EditText classNumber = (EditText) findViewById(R.id.editText_classnumber);
@@ -119,12 +136,12 @@ public class AddClass_Activity extends AppCompatActivity {
             int numOfClasses = database.getInt("total_classes", 0);
             SharedPreferences.Editor databaseEditor = database.edit();
             databaseEditor.putInt("total_classes", numOfClasses+1);
-            String test1 = "class_" + (numOfClasses+1) +"_school";
 
-
+            databaseEditor.putString("class_" + (numOfClasses+1) +"_school", schoolName.getText().toString().toUpperCase());
             databaseEditor.putString("class_" + (numOfClasses+1) +"_cNumber", classNumber.getText().toString());
             databaseEditor.putString("class_" + (numOfClasses+1) +"_sNumber", sectionNumber.getText().toString());
             databaseEditor.putString("class_" + (numOfClasses+1) +"_semester", semester_selected.getNameCode());
+            databaseEditor.putString("class_" + (numOfClasses+1) +"_filled", result);
             // might want to change "executed" for the returned string passed
             // into onPostExecute() but that is upto you
             databaseEditor.apply();
