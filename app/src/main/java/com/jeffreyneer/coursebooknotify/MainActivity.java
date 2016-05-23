@@ -61,17 +61,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
 
-
-                for(int i = 0; i<schoolClasses.size();i++){
-                    updateFilled(schoolClasses.get(i), i+1);
-                }
+                CourseBookLookup cbLookup = new CourseBookLookup();
+                cbLookup.execute(schoolClasses);
                 ArrayList<SchoolClass> newschoolClasses = loadSchoolClassArray();
                 schoolClasses.clear();
                 schoolClasses.addAll(newschoolClasses);
                 adapter.notifyDataSetChanged();
 
                 mSwipeRefreshLayout.setRefreshing(false);
-                //Call async method for refresh
             }
         });
     }
@@ -119,14 +116,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    private class CourseBookLookup extends AsyncTask<String, Void, String> {
+    private class CourseBookLookup extends AsyncTask<ArrayList<SchoolClass>, Void, ArrayList<SchoolClass>> {
 
         @Override
-        protected String doInBackground(String[] params) {
-            /*BufferedReader reader = null;
+        protected ArrayList<SchoolClass> doInBackground(ArrayList<SchoolClass>... inputClassList) {
+            ArrayList<SchoolClass> oldClassList = inputClassList[0];
+            ArrayList<SchoolClass> updatedSchoolList = new ArrayList<>();
+            for(int i = 0; i<oldClassList.size(); i++){
+            BufferedReader reader = null;
             StringBuilder builder = new StringBuilder();
             try {
-                String courseDatastuff = params[0] + params[1] + "." + params[2] + "." + params[3];
+                String courseDatastuff = oldClassList.get(i).getmSchool() + oldClassList.get(i).getMcNumber() + "." + oldClassList.get(i).getMsNumber() + "." + oldClassList.get(i).getmSemeseter();
+
                 URL url = new URL("http://coursebook.utdallas.edu/" + courseDatastuff);
 
 
@@ -136,54 +137,53 @@ public class MainActivity extends AppCompatActivity {
                     builder.append(line.trim());
                 }
             }catch( Exception e){
-                return "ERROR";
-            } finally {
+                    return null;
+                } finally {
                 if (reader != null) try {
-                    reader.close();
-                } catch (IOException logOrIgnore) {
+                        reader.close();
+                    } catch (IOException logOrIgnore) {
+                    }
                 }
-            }
-            String Pagedata = builder.toString();
-            String checkBeforeHTML = "transparent; \" title=\"";
-            String checkAfterHTML = "\"></div> </td><td style=\"text-align: center;\">";
-            int sizeOfCheckBeforeHTML = Pagedata.indexOf(checkBeforeHTML);
-            if (sizeOfCheckBeforeHTML < 0) {
-                fail=true;
-                return "NULL";
-            }
-            String HTMLAfterCheckBeforeHTML = Pagedata.substring(sizeOfCheckBeforeHTML + checkBeforeHTML.length());
-            int sizeOfHTMLAfterCheckBeforeHTML = HTMLAfterCheckBeforeHTML.indexOf(checkAfterHTML);
-            if (sizeOfHTMLAfterCheckBeforeHTML < 0) {
-                fail=true;
-                return "NULL";
-            }
+                String Pagedata = builder.toString();
+                String checkBeforeHTML = "transparent; \" title=\"";
+                String checkAfterHTML = "\"></div> </td><td style=\"text-align: center;\">";
+                int sizeOfCheckBeforeHTML = Pagedata.indexOf(checkBeforeHTML);
+                if (sizeOfCheckBeforeHTML < 0) {
+                    fail=true;
+                    return null;
+                }
+                String HTMLAfterCheckBeforeHTML = Pagedata.substring(sizeOfCheckBeforeHTML + checkBeforeHTML.length());
+                int sizeOfHTMLAfterCheckBeforeHTML = HTMLAfterCheckBeforeHTML.indexOf(checkAfterHTML);
+                if (sizeOfHTMLAfterCheckBeforeHTML < 0) {
+                    fail=true;
+                    return null;
+                 }
 
-            //TODO: Remove redundancy after class is tested
-            String ExtractedPrecentFullString = HTMLAfterCheckBeforeHTML.substring(0, sizeOfHTMLAfterCheckBeforeHTML);
+                //TODO: Remove redundancy after class is tested
+                String ExtractedPrecentFullString = HTMLAfterCheckBeforeHTML.substring(0, sizeOfHTMLAfterCheckBeforeHTML);
 
-            return ExtractedPrecentFullString + "," + params[4];
-            */
-            return "200% Filled"+ "," + params[4];
+                updatedSchoolList.add(oldClassList.get(i));
+                updatedSchoolList.get(i).setmFilled(ExtractedPrecentFullString);
+            }
+            return updatedSchoolList;
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(ArrayList<SchoolClass> result) {
 
-            String classNumber = result.substring(result.indexOf(',')+1);
-            String returnValue = result.substring(0,result.indexOf(','));
             // txt.setText(result);
-            if(returnValue=="NULL"){
-                return;
-            }
 
             SharedPreferences database = getSharedPreferences(DATABASE, 0);
 
             SharedPreferences.Editor databaseEditor = database.edit();
 
-            databaseEditor.putString("class_" + classNumber +"_filled", returnValue);
+            for(int i = 0; i<result.size(); i++){
+                databaseEditor.putString("class_" + result.get(i).getmFilled() +"_filled", Integer.toString(i+1));
+            }
             // might want to change "executed" for the returned string passed
             // into onPostExecute() but that is upto you
             databaseEditor.apply();
+
 
 
         }
@@ -204,10 +204,4 @@ public class MainActivity extends AppCompatActivity {
         return newschoolClasses;
     }
 
-    void updateFilled(SchoolClass input, int classNumber){
-        CourseBookLookup cbLookup = new CourseBookLookup();
-        cbLookup.execute(input.getmSchool(), input.getMcNumber(), input.getMsNumber(), input.getmSemeseter(), String.valueOf(classNumber));
-
-
-    }
 }

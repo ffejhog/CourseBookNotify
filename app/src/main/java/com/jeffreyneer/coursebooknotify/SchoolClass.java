@@ -26,6 +26,10 @@ public class SchoolClass {
         return mFilled;
     }
 
+    public void setmFilled(String input) {
+        mFilled = input;
+    }
+
     public SchoolClass(String school, String cNumber, String sNumber, String semester, String filled){
         mSchool = school;
         mcNumber = cNumber;
