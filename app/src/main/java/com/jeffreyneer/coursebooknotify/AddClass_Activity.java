@@ -53,11 +53,17 @@ public class AddClass_Activity extends AppCompatActivity {
         EditText classNumber = (EditText) findViewById(R.id.editText_classnumber);
         EditText sectionNumber = (EditText) findViewById(R.id.editText_sectionnumber);
 
-
         TextView percentOutTextView = (TextView) findViewById(R.id.textView_PercentOutput);
+
+        if(schoolName.getText().toString().toLowerCase().trim().equals("") || classNumber.getText().toString().trim().equals("") || sectionNumber.getText().toString().trim().equals("")){
+            percentOutTextView.setText("Please fill in all boxes");
+            return;
+        }
+
+
         CourseBookLookup cbLookup = new CourseBookLookup();
         Semester_Spinner_Object semester_selected = (Semester_Spinner_Object) ((Spinner) findViewById(R.id.spinner_semester)).getSelectedItem();
-        cbLookup.execute(schoolName.getText().toString().toLowerCase(),classNumber.getText().toString(),sectionNumber.getText().toString(),semester_selected.getNameCode());
+        cbLookup.execute(schoolName.getText().toString().toLowerCase().trim(),classNumber.getText().toString().trim(),sectionNumber.getText().toString().trim(),semester_selected.getNameCode());
         try {
             cbLookup.get();
             if (fail) {
