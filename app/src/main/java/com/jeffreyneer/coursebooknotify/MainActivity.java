@@ -1,5 +1,6 @@
 package com.jeffreyneer.coursebooknotify;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -83,12 +85,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    class myOnClickListener implements View.OnClickListener {
+    public int viewToDelete = -1;
+
+    class myOnClickListener implements View.OnLongClickListener {
         @Override
-        public void onClick(View v) {
-            Toast.makeText(v.getContext(), "On click", Toast.LENGTH_SHORT).show();
+        public boolean onLongClick(View v) {
+            viewToDelete = (int) v.getTag();
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setMessage("Do you want to delete this class?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+            return true;
         }
     }
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    deleteClassFromDatabase(viewToDelete);
+                    viewToDelete = -1;
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    viewToDelete = -1;
+                    break;
+            }
+        }
+    };
 
 
     public void openAddClass_Activity(View view) {
@@ -196,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor databaseEditor = database.edit();
 
             for (int i = 0; i < result.size(); i++) {
-                databaseEditor.putString("class_" + result.get(i).getmFilled() + "_filled", Integer.toString(i + 1));
+                databaseEditor.putString("class_" + (i+1) + "_filled", result.get(i).getmFilled());
             }
             // might want to change "executed" for the returned string passed
             // into onPostExecute() but that is upto you
@@ -219,6 +242,39 @@ public class MainActivity extends AppCompatActivity {
                     database.getString("class_" + i + "_filled", "")));
         }
         return newschoolClasses;
+    }
+
+    void deleteClassFromDatabase(int numOfClassToDelete){
+        SharedPreferences database = getSharedPreferences(DATABASE, 0);
+
+        SharedPreferences.Editor databaseEditor = database.edit();
+
+        int numOfClasses = database.getInt("total_classes", 0);
+
+        for (int i = numOfClassToDelete; i < numOfClasses; i++) {
+            databaseEditor.putString("class_" + i + "_school",  database.getString("class_" + (i+1) + "_school", ""));
+            databaseEditor.putString("class_" + i + "_cNumber",  database.getString("class_" + (i+1) + "_cNumber", ""));
+            databaseEditor.putString("class_" + i + "_sNumber",  database.getString("class_" + (i+1) + "_sNumber", ""));
+            databaseEditor.putString("class_" + i + "_semester",  database.getString("class_" + (i+1) + "_semester", ""));
+            databaseEditor.putString("class_" + i + "_filled",  database.getString("class_" + (i+1) + "_filled", ""));
+        }
+        databaseEditor.remove("class_" + numOfClasses + "_school");
+        databaseEditor.remove("class_" + numOfClasses + "_cNumber");
+        databaseEditor.remove("class_" + numOfClasses + "_sNumber");
+        databaseEditor.remove("class_" + numOfClasses + "_semester");
+        databaseEditor.remove("class_" + numOfClasses + "_filled");
+
+        databaseEditor.putInt("total_classes", numOfClasses-1);
+        // might want to change "executed" for the returned string passed
+        // into onPostExecute() but that is upto you
+        databaseEditor.apply();
+
+        ArrayList<SchoolClass> newschoolClasses = loadSchoolClassArray();
+
+        schoolClasses.clear();
+        schoolClasses.addAll(newschoolClasses);
+        adapter.notifyDataSetChanged();
+
     }
 
 }

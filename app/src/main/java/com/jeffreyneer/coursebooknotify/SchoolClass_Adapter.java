@@ -27,14 +27,14 @@ public class SchoolClass_Adapter extends RecyclerView.Adapter<SchoolClass_Adapte
         public TextView schoolClassSection;
         public TextView semesterHolder;
         public TextView filledHolder;
-
+        public View mView;
 
         public ViewHolder(View itemView) {
         super(itemView);
             schoolClassSection = (TextView) itemView.findViewById(R.id.school_number_section);
             semesterHolder = (TextView) itemView.findViewById(R.id.semester);
             filledHolder = (TextView) itemView.findViewById(R.id.Fill_amount);
-
+            mView = itemView;
 
 
         }
@@ -47,7 +47,7 @@ public class SchoolClass_Adapter extends RecyclerView.Adapter<SchoolClass_Adapte
 
     //Store List of objects
     private List<SchoolClass> mSchoolClass;
-    static View.OnLongClickListener listener;
+
 
     public SchoolClass_Adapter(List<SchoolClass> SchoolClass){
         mSchoolClass = SchoolClass;
@@ -60,7 +60,7 @@ public class SchoolClass_Adapter extends RecyclerView.Adapter<SchoolClass_Adapte
 
         //Inflate layout
         View schoolClassView = inflater.inflate(R.layout.item_class, parent, false);
-        schoolClassView.setOnClickListener(MainActivity.myOnClickListener);
+        schoolClassView.setOnLongClickListener(MainActivity.myOnClickListener);
         //Return a holder instance
         ViewHolder viewHolder = new ViewHolder(schoolClassView);
 
@@ -83,11 +83,12 @@ public class SchoolClass_Adapter extends RecyclerView.Adapter<SchoolClass_Adapte
         TextView filledText = viewHolder.filledHolder;
         filledText.setText(schoolClass.getmFilled());
 
-
+        viewHolder.mView.setTag(position);
     }
     //Return total number of items
     @Override
     public int getItemCount(){
         return mSchoolClass.size();
     }
+
 }
