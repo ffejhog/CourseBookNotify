@@ -7,5 +7,6 @@
     <string name="section_number_textfield_hint">Section Number</string>
     <string name="semester_textfield_hint">Semester</string>
     <string name="button_sumbit">Submit</string>
+    <string name="action_delete">Delete</string>
 
 </resources>
