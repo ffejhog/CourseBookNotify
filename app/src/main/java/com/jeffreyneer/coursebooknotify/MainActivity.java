@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
 
         int numOfClasses = database.getInt("total_classes", 0);
 
-        for (int i = numOfClassToDelete; i < numOfClasses; i++) {
+        for (int i = numOfClassToDelete+1; i < numOfClasses; i++) {
             databaseEditor.putString("class_" + i + "_school",  database.getString("class_" + (i+1) + "_school", ""));
             databaseEditor.putString("class_" + i + "_cNumber",  database.getString("class_" + (i+1) + "_cNumber", ""));
             databaseEditor.putString("class_" + i + "_sNumber",  database.getString("class_" + (i+1) + "_sNumber", ""));
