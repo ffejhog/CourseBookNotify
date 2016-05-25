@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean fail = false;
     public final String DATABASE = "database";
     static final int OPEN_NEW_CLASS = 1;
+    static final int OPEN_SETTINGS = 1;
     SharedPreferences database;
     ArrayList<SchoolClass> schoolClasses = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -113,6 +114,19 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, Settings_Activity.class);
+                startActivityForResult(intent, OPEN_SETTINGS);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     public void openAddClass_Activity(View view) {
         Intent intent = new Intent(this, AddClass_Activity.class);
@@ -124,21 +138,6 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void onResume() {

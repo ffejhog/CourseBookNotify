@@ -19,13 +19,18 @@
             android:theme="@style/Theme.AppTheme.Light.Green">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".AddClass_Activity"
             android:theme="@style/Theme.AppTheme.Light.Green">
-            >
+
+        </activity>
+
+        <activity android:name=".Settings_Activity"
+            android:theme="@style/Theme.AppTheme.Light.Green">
+
         </activity>
 
     </application>

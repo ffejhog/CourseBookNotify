@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">CourseBook Notify</string>
     <string name="action_settings">Settings</string>
-    <string name="action_test">Test</string>
     <string name="class_school_textfield_hint">Class School</string>
     <string name="class_number_textfield_hint">Class Number</string>
     <string name="section_number_textfield_hint">Section Number</string>
     <string name="semester_textfield_hint">Semester</string>
     <string name="button_sumbit">Submit</string>
     <string name="action_delete">Delete</string>
+    <string name="notifications_Checkbox">Notify when a previously open class is now open?</string>
 
 </resources>
