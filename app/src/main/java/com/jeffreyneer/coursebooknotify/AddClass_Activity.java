@@ -64,11 +64,15 @@ public class AddClass_Activity extends AppCompatActivity {
         EditText classNumber = (EditText) findViewById(R.id.editText_classnumber);
         EditText sectionNumber = (EditText) findViewById(R.id.editText_sectionnumber);
         TextView semseterTextview = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
-        String semseter = returnSemesterCode(semseterTextview.getText().toString());
+        String semseter = "";
+        if(semseterTextview.getText().toString().trim().equals("")){
 
+        }else {
+            semseter = returnSemesterCode(semseterTextview.getText().toString());
+        }
         TextView percentOutTextView = (TextView) findViewById(R.id.textView_PercentOutput);
 
-        if(schoolName.getText().toString().toLowerCase().trim().equals("") || classNumber.getText().toString().trim().equals("") || sectionNumber.getText().toString().trim().equals("")){
+        if(schoolName.getText().toString().toLowerCase().trim().equals("") || classNumber.getText().toString().trim().equals("") || sectionNumber.getText().toString().trim().equals("") || semseter.trim().equals("")){
             percentOutTextView.setText("Please fill in all boxes");
             return;
         }
