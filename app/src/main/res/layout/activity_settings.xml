@@ -23,6 +23,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="None of this does anything yet"
         android:id="@+id/textView"
-        android:layout_below="@+id/switch1"
+        android:layout_below="@+id/AlarmSwitch"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
