@@ -79,7 +79,7 @@ public class Settings_Activity extends AppCompatActivity {
                     SharedPreferences.Editor databaseEditor = database.edit();
                     databaseEditor.putBoolean("AlarmOn", false);
                     databaseEditor.commit();
-                    
+
                     //Cancel the alarm
                     AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                     manager.cancel(pendingIntent);
