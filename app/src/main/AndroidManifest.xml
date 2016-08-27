@@ -3,6 +3,8 @@
     package="com.jeffreyneer.coursebooknotify">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+
 
     <application
         android:allowBackup="true"
@@ -32,6 +34,12 @@
             android:theme="@style/Theme.AppTheme.Light.Green">
 
         </activity>
+
+        <receiver android:name="AlarmReceiver">
+            <intent-filter>
+                <action android:name="com.jeffreyneer.coursebooknotify.alarm" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

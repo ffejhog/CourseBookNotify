@@ -31,6 +31,7 @@ public class Settings_Activity extends AppCompatActivity {
           /* Retrieve a PendingIntent that will perform a broadcast
           * This of it like a sort of storage container for all the alarms for this particular class(or context)*/
         Intent alarmIntent = new Intent(Settings_Activity.this, AlarmReceiver.class);
+        alarmIntent.setAction("com.jeffreyneer.coursebooknotify.alarm");
         pendingIntent = PendingIntent.getBroadcast(Settings_Activity.this, 0, alarmIntent, 0);
 
         //Stuff with alarm switch
@@ -62,11 +63,12 @@ public class Settings_Activity extends AppCompatActivity {
                     SharedPreferences.Editor databaseEditor = database.edit();
                     databaseEditor.putBoolean("AlarmOn", true);
 
+                    databaseEditor.commit();
                     //activate the alarm
                     AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    int interval = 60000;
+                    int interval = 10000;
 
-                    manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, interval, pendingIntent);
+                    manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, AlarmManager.INTERVAL_FIFTEEN_MINUTES,  AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
 
                     Toast.makeText(TemporaryContext, "Alarm Set", Toast.LENGTH_SHORT).show();
@@ -76,7 +78,8 @@ public class Settings_Activity extends AppCompatActivity {
                     SharedPreferences database = getSharedPreferences(DATABASE, 0);
                     SharedPreferences.Editor databaseEditor = database.edit();
                     databaseEditor.putBoolean("AlarmOn", false);
-
+                    databaseEditor.commit();
+                    
                     //Cancel the alarm
                     AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                     manager.cancel(pendingIntent);

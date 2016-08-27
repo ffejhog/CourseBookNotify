@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.jeffreyneer.coursebooknotify"
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 3
         versionName "0.1.6"
