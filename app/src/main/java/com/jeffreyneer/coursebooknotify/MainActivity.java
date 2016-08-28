@@ -74,12 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
                 CourseBookLookup cbLookup = new CourseBookLookup();
                 cbLookup.execute(schoolClasses);
-                ArrayList<SchoolClass> newschoolClasses = loadSchoolClassArray();
-                schoolClasses.clear();
-                schoolClasses.addAll(newschoolClasses);
-                adapter.notifyDataSetChanged();
 
-                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -206,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 updatedSchoolList.get(i).setmFilled(ExtractedPrecentFullString);
             }
             return updatedSchoolList;
+
         }
 
         @Override
@@ -219,11 +215,16 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < result.size(); i++) {
                 databaseEditor.putString("class_" + (i+1) + "_filled", result.get(i).getmFilled());
+
             }
             // might want to change "executed" for the returned string passed
             // into onPostExecute() but that is upto you
             databaseEditor.apply();
-
+            ArrayList<SchoolClass> newschoolClasses = loadSchoolClassArray();
+            schoolClasses.clear();
+            schoolClasses.addAll(newschoolClasses);
+            adapter.notifyDataSetChanged();
+            mSwipeRefreshLayout.setRefreshing(false);
 
         }
 

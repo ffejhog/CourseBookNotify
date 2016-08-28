@@ -17,12 +17,14 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 
-    <TextView
+    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="None of this does anything yet"
-        android:id="@+id/textView"
+        android:id="@+id/AlarmSpinner"
         android:layout_below="@+id/AlarmSwitch"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/AlarmSwitch"
+        android:layout_alignStart="@+id/AlarmSwitch"
+        android:layout_alignRight="@+id/AlarmSwitch"
+        android:layout_alignEnd="@+id/AlarmSwitch" />
+
 </RelativeLayout>

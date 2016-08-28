@@ -9,7 +9,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -21,6 +25,8 @@ public class Settings_Activity extends AppCompatActivity {
     private PendingIntent pendingIntent;
     private Switch AlarmSwitch;
     private boolean AlarmSet;
+    private int AlarmTimeSet;
+    private Spinner AlarmSpiner;
     public final String DATABASE = "database";
 
     @Override
@@ -32,18 +38,34 @@ public class Settings_Activity extends AppCompatActivity {
           * This of it like a sort of storage container for all the alarms for this particular class(or context)*/
         Intent alarmIntent = new Intent(Settings_Activity.this, AlarmReceiver.class);
         alarmIntent.setAction("com.jeffreyneer.coursebooknotify.alarm");
-        pendingIntent = PendingIntent.getBroadcast(Settings_Activity.this, 0, alarmIntent, 0);
+        pendingIntent = PendingIntent.getBroadcast(Settings_Activity.this, 11, alarmIntent, 0);
 
         //Stuff with alarm switch
         AlarmSwitch = (Switch) findViewById(R.id.AlarmSwitch);
+        AlarmSpiner = (Spinner) findViewById(R.id.AlarmSpinner);
+
+        //Populate spinner adapter and set adapter to spinner
+        ArrayAdapter<CharSequence> AlarmSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.Alarm_Spinner, android.R.layout.simple_spinner_item);
+        AlarmSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        AlarmSpiner.setAdapter(AlarmSpinnerAdapter);
+
+
+
+
 
         SharedPreferences database = getSharedPreferences(DATABASE, 0);
         AlarmSet = database.getBoolean("AlarmOn", false);
+        AlarmTimeSet = database.getInt("AlarmTime", 0);
+
 
         if(AlarmSet){
             AlarmSwitch.setChecked(true);
+            AlarmSpiner.setEnabled(true);
+            AlarmSpiner.setSelection(AlarmTimeSet);
         }else{
             AlarmSwitch.setChecked(false);
+            AlarmSpiner.setEnabled(false);
+            AlarmSpiner.setSelection(0);
         }
 
         //TODO: REMOVE WHEN FINISHED WITH ALARM STUFF
@@ -62,13 +84,16 @@ public class Settings_Activity extends AppCompatActivity {
                     SharedPreferences database = getSharedPreferences(DATABASE, 0);
                     SharedPreferences.Editor databaseEditor = database.edit();
                     databaseEditor.putBoolean("AlarmOn", true);
+                    databaseEditor.putInt("AlarmTime", 0);
 
-                    databaseEditor.commit();
+                    databaseEditor.apply();
                     //activate the alarm
                     AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    int interval = 10000;
+                    long interval = AlarmManager.INTERVAL_HALF_HOUR;
+                    AlarmSpiner.setSelection(0);
+                    AlarmSpiner.setEnabled(true);
 
-                    manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, AlarmManager.INTERVAL_FIFTEEN_MINUTES,  AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+                    manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, interval,  interval, pendingIntent);
 
 
                     Toast.makeText(TemporaryContext, "Alarm Set", Toast.LENGTH_SHORT).show();
@@ -78,7 +103,7 @@ public class Settings_Activity extends AppCompatActivity {
                     SharedPreferences database = getSharedPreferences(DATABASE, 0);
                     SharedPreferences.Editor databaseEditor = database.edit();
                     databaseEditor.putBoolean("AlarmOn", false);
-                    databaseEditor.commit();
+                    databaseEditor.apply();
 
                     //Cancel the alarm
                     AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -88,6 +113,55 @@ public class Settings_Activity extends AppCompatActivity {
 
             }
         });
+
+        AlarmSpiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                SharedPreferences database = getSharedPreferences(DATABASE, 0);
+                AlarmSet = database.getBoolean("AlarmOn", false);
+                if(AlarmSet){
+                    //Find the required interval between alarms
+                    long interval;
+                    switch(position){
+                        case 0:
+                            interval = AlarmManager.INTERVAL_HALF_HOUR;
+                            break;
+                        case 1:
+                            interval = AlarmManager.INTERVAL_HOUR;
+                            break;
+                        case 2:
+                            interval = AlarmManager.INTERVAL_HOUR * 3;
+                            break;
+                        case 3:
+                            interval = AlarmManager.INTERVAL_HOUR * 6;
+                            break;
+                        case 4:
+                            interval = AlarmManager.INTERVAL_DAY;
+                            break;
+                        default:
+                            interval = AlarmManager.INTERVAL_DAY;
+                            break;
+                    }
+
+                    //Save interval data to database
+                    SharedPreferences.Editor databaseEditor = database.edit();
+                    databaseEditor.putInt("AlarmTime", position);
+                    databaseEditor.apply();
+                    //Cancel any current alarms
+                    AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    manager.cancel(pendingIntent);
+                    manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, interval,  interval, pendingIntent);
+                    Toast.makeText(TemporaryContext, "Alarm Set", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                return;
+            }
+        });
+
+
+
+
 
     }
 
