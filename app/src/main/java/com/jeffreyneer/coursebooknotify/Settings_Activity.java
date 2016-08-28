@@ -3,9 +3,12 @@ package com.jeffreyneer.coursebooknotify;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
+
 
 /**
  * Created by Jeffrey Neer on 5/24/2016.
@@ -68,8 +71,7 @@ public class Settings_Activity extends AppCompatActivity {
             AlarmSpiner.setSelection(0);
         }
 
-        //TODO: REMOVE WHEN FINISHED WITH ALARM STUFF
-        final Context TemporaryContext = this;
+        final Context MainSettingsMenuContext = this;
 
         //attach a listener to check for changes in state
         AlarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -94,9 +96,10 @@ public class Settings_Activity extends AppCompatActivity {
                     AlarmSpiner.setEnabled(true);
 
                     manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, interval,  interval, pendingIntent);
+                    ComponentName receiver = new ComponentName(MainSettingsMenuContext, BootReceiver.class);
+                    PackageManager pm = MainSettingsMenuContext.getPackageManager();
 
-
-                    Toast.makeText(TemporaryContext, "Alarm Set", Toast.LENGTH_SHORT).show();
+                    pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
                 }else{
                     //update the database
@@ -105,10 +108,19 @@ public class Settings_Activity extends AppCompatActivity {
                     databaseEditor.putBoolean("AlarmOn", false);
                     databaseEditor.apply();
 
+                    //Disable the alarm spinner
+                    AlarmSpiner.setEnabled(false);
+                    AlarmSpiner.setSelection(0);
+
                     //Cancel the alarm
                     AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                     manager.cancel(pendingIntent);
-                    Toast.makeText(TemporaryContext, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+
+                    ComponentName receiver = new ComponentName(MainSettingsMenuContext, BootReceiver.class);
+                    PackageManager pm = MainSettingsMenuContext.getPackageManager();
+
+                    pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
                 }
 
             }
@@ -150,7 +162,7 @@ public class Settings_Activity extends AppCompatActivity {
                     AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                     manager.cancel(pendingIntent);
                     manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, interval,  interval, pendingIntent);
-                    Toast.makeText(TemporaryContext, "Alarm Set", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -164,5 +176,6 @@ public class Settings_Activity extends AppCompatActivity {
 
 
     }
+
 
 }

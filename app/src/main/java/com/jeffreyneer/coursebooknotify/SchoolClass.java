@@ -5,6 +5,7 @@ package com.jeffreyneer.coursebooknotify;
  */
 public class SchoolClass {
     private String mSchool, mcNumber, msNumber, mSemeseter, mFilled;
+    private boolean updatedFlag;
 
     public String getmSchool() {
         return mSchool;
@@ -22,13 +23,16 @@ public class SchoolClass {
         return mSemeseter;
     }
 
-    public String getmFilled() {
-        return mFilled;
-    }
+    public String getmFilled() { return mFilled; }
+
+    public boolean getUpdatedFlag() { return updatedFlag;}
+
 
     public void setmFilled(String input) {
         mFilled = input;
     }
+
+    public void setUpdatedFlag(Boolean input) {updatedFlag = input;}
 
     public SchoolClass(String school, String cNumber, String sNumber, String semester, String filled){
         mSchool = school;
@@ -36,6 +40,7 @@ public class SchoolClass {
         msNumber = sNumber;
         mSemeseter = semester;
         mFilled = filled;
+        updatedFlag = false;
     }
 
 
