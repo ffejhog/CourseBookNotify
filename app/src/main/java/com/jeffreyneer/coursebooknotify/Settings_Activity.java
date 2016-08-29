@@ -1,16 +1,13 @@
 package com.jeffreyneer.coursebooknotify;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 
 /**
@@ -31,6 +29,7 @@ public class Settings_Activity extends AppCompatActivity {
     private int AlarmTimeSet;
     private Spinner AlarmSpiner;
     public final String DATABASE = "database";
+    private TextView AlarmNoticeTextview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,7 @@ public class Settings_Activity extends AppCompatActivity {
         //Stuff with alarm switch
         AlarmSwitch = (Switch) findViewById(R.id.AlarmSwitch);
         AlarmSpiner = (Spinner) findViewById(R.id.AlarmSpinner);
+        AlarmNoticeTextview = (TextView) findViewById(R.id.alarm_notice_battery_textview);
 
         //Populate spinner adapter and set adapter to spinner
         ArrayAdapter<CharSequence> AlarmSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.Alarm_Spinner, android.R.layout.simple_spinner_item);
@@ -63,11 +63,13 @@ public class Settings_Activity extends AppCompatActivity {
 
         if(AlarmSet){
             AlarmSwitch.setChecked(true);
-            AlarmSpiner.setEnabled(true);
+            AlarmSpiner.setVisibility(View.VISIBLE);
+            AlarmNoticeTextview.setVisibility(View.VISIBLE);
             AlarmSpiner.setSelection(AlarmTimeSet);
         }else{
             AlarmSwitch.setChecked(false);
-            AlarmSpiner.setEnabled(false);
+            AlarmNoticeTextview.setVisibility(View.GONE);
+            AlarmSpiner.setVisibility(View.GONE);
             AlarmSpiner.setSelection(0);
         }
 
@@ -93,7 +95,8 @@ public class Settings_Activity extends AppCompatActivity {
                     AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                     long interval = AlarmManager.INTERVAL_HALF_HOUR;
                     AlarmSpiner.setSelection(0);
-                    AlarmSpiner.setEnabled(true);
+                    AlarmNoticeTextview.setVisibility(View.VISIBLE);
+                    AlarmSpiner.setVisibility(View.VISIBLE);
 
                     manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, interval,  interval, pendingIntent);
                     ComponentName receiver = new ComponentName(MainSettingsMenuContext, BootReceiver.class);
@@ -109,7 +112,8 @@ public class Settings_Activity extends AppCompatActivity {
                     databaseEditor.apply();
 
                     //Disable the alarm spinner
-                    AlarmSpiner.setEnabled(false);
+                    AlarmNoticeTextview.setVisibility(View.GONE);
+                    AlarmSpiner.setVisibility(View.GONE);
                     AlarmSpiner.setSelection(0);
 
                     //Cancel the alarm

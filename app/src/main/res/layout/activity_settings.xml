@@ -21,10 +21,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/AlarmSpinner"
-        android:layout_below="@+id/AlarmSwitch"
+        android:layout_below="@+id/alarm_notice_battery_textview"
         android:layout_alignLeft="@+id/AlarmSwitch"
-        android:layout_alignStart="@+id/AlarmSwitch"
-        android:layout_alignRight="@+id/AlarmSwitch"
-        android:layout_alignEnd="@+id/AlarmSwitch" />
+        android:layout_alignStart="@+id/AlarmSwitch" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/alarm_notice_battery"
+        android:id="@+id/alarm_notice_battery_textview"
+        android:layout_below="@+id/AlarmSwitch"
+        android:layout_alignLeft="@+id/AlarmSpinner"
+        android:layout_alignStart="@+id/AlarmSpinner" />
 
 </RelativeLayout>

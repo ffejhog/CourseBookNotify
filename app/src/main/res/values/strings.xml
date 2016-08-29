@@ -8,6 +8,7 @@
     <string name="button_sumbit">Submit</string>
     <string name="action_delete">Delete</string>
     <string name="notifications_Checkbox">Notify when a previously open class is now open?</string>
+    <string name="alarm_notice_battery">How often should this be checked?\n (Note: A lower value may result in higher battery drain)</string>
 
     <string-array name="Alarm_Spinner">
         <item>30 Minutes</item>
