@@ -38,23 +38,14 @@ public class AddClass_Activity extends AppCompatActivity {
 
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-       // ArrayAdapter<Semester_Spinner_Object> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getSemesterList());
-        ArrayAdapter<Semester_Spinner_Object> adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, getSemesterList());
-
+        ArrayAdapter<Semester_Spinner_Object> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getSemesterList());
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_semester);
         // Specify the layout to use when the list of choices appears
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        //spinner.setAdapter(adapter);
+        spinner.setAdapter(adapter);
 
-        final AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
-        textView.setAdapter(adapter);
 
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View arg0) {
-                textView.showDropDown();
-            }
-        });
 
     }
 
@@ -63,24 +54,18 @@ public class AddClass_Activity extends AppCompatActivity {
         EditText schoolName = (EditText) findViewById(R.id.editText_school);
         EditText classNumber = (EditText) findViewById(R.id.editText_classnumber);
         EditText sectionNumber = (EditText) findViewById(R.id.editText_sectionnumber);
-        TextView semseterTextview = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
-        String semseter = "";
-        if(semseterTextview.getText().toString().trim().equals("")){
-
-        }else {
-            semseter = returnSemesterCode(semseterTextview.getText().toString());
-        }
         TextView percentOutTextView = (TextView) findViewById(R.id.textView_PercentOutput);
 
-        if(schoolName.getText().toString().toLowerCase().trim().equals("") || classNumber.getText().toString().trim().equals("") || sectionNumber.getText().toString().trim().equals("") || semseter.trim().equals("")){
+        if(schoolName.getText().toString().toLowerCase().trim().equals("") || classNumber.getText().toString().trim().equals("") || sectionNumber.getText().toString().trim().equals("")){
             percentOutTextView.setText("Please fill in all boxes");
             return;
         }
-
+        percentOutTextView.setText("Searching for class, Please wait...");
 
         CourseBookLookup cbLookup = new CourseBookLookup();
 
-        cbLookup.execute(schoolName.getText().toString().toLowerCase().trim(),classNumber.getText().toString().trim(),sectionNumber.getText().toString().trim(),semseter);
+        Semester_Spinner_Object semester_selected = (Semester_Spinner_Object) ((Spinner) findViewById(R.id.spinner_semester)).getSelectedItem();
+        cbLookup.execute(schoolName.getText().toString().toLowerCase().trim(),classNumber.getText().toString().trim(),sectionNumber.getText().toString().trim(),semester_selected.getNameCode());
         try {
             cbLookup.get();
             if (fail) {
@@ -153,8 +138,7 @@ public class AddClass_Activity extends AppCompatActivity {
             EditText schoolName = (EditText) findViewById(R.id.editText_school);
             EditText classNumber = (EditText) findViewById(R.id.editText_classnumber);
             EditText sectionNumber = (EditText) findViewById(R.id.editText_sectionnumber);
-            TextView semseterTextview = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
-            String semseter = returnSemesterCode(semseterTextview.getText().toString());
+            Semester_Spinner_Object semester_selected = (Semester_Spinner_Object) ((Spinner) findViewById(R.id.spinner_semester)).getSelectedItem();
 
             SharedPreferences database = getSharedPreferences(DATABASE, 0);
             int numOfClasses = database.getInt("total_classes", 0);
@@ -164,7 +148,7 @@ public class AddClass_Activity extends AppCompatActivity {
             databaseEditor.putString("class_" + (numOfClasses+1) +"_school", schoolName.getText().toString().toUpperCase());
             databaseEditor.putString("class_" + (numOfClasses+1) +"_cNumber", classNumber.getText().toString());
             databaseEditor.putString("class_" + (numOfClasses+1) +"_sNumber", sectionNumber.getText().toString());
-            databaseEditor.putString("class_" + (numOfClasses+1) +"_semester", semseter);
+            databaseEditor.putString("class_" + (numOfClasses+1) +"_semester", semester_selected.getNameCode());
             databaseEditor.putString("class_" + (numOfClasses+1) +"_filled", result);
             // might want to change "executed" for the returned string passed
             // into onPostExecute() but that is upto you

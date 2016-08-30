@@ -107,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, Settings_Activity.class);
                 startActivityForResult(intent, OPEN_SETTINGS);
                 return true;
+            case R.id.action_refresh:
+                CourseBookLookup cbLookup = new CourseBookLookup();
+                cbLookup.execute(schoolClasses);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

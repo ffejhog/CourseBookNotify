@@ -78,7 +78,16 @@ public class SchoolClass_Adapter extends RecyclerView.Adapter<SchoolClass_Adapte
         textView.setText(setText);
 
         TextView semesterText = viewHolder.semesterHolder;
-        semesterText.setText(schoolClass.getmSemeseter());
+        String outputTextLetter = schoolClass.getmSemeseter().substring(2);
+        String outputText;
+        if(outputTextLetter.equals("f")){
+            outputText = "Fall 20" +  schoolClass.getmSemeseter().substring(0,2);
+        }else if (outputTextLetter.equals("s")){
+            outputText = "Spring 20" +  schoolClass.getmSemeseter().substring(0,2);
+        }else{
+            outputText = "Summer 20" +  schoolClass.getmSemeseter().substring(0,2);
+        }
+        semesterText.setText(outputText);
 
         TextView filledText = viewHolder.filledHolder;
         filledText.setText(schoolClass.getmFilled());

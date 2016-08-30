@@ -35,7 +35,6 @@ public class Settings_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
           /* Retrieve a PendingIntent that will perform a broadcast
           * This of it like a sort of storage container for all the alarms for this particular class(or context)*/
         Intent alarmIntent = new Intent(Settings_Activity.this, AlarmReceiver.class);
