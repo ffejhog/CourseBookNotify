@@ -8,8 +8,8 @@ android {
         applicationId "com.jeffreyneer.coursebooknotify"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 9
-        versionName "0.2.3"
+        versionCode 10
+        versionName "1.0.0"
     }
     
     lintOptions {

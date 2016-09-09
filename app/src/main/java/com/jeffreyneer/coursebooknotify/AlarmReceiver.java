@@ -86,7 +86,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     return null;
                 }
 
-                //TODO: Remove redundancy after class is tested
+
                 String ExtractedPrecentFullString = HTMLAfterCheckBeforeHTML.substring(0, sizeOfHTMLAfterCheckBeforeHTML);
 
                 Log.d("AlarmReciever", "Old class precent filled: " + oldClassList.get(i).getmFilled());

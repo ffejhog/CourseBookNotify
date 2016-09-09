@@ -121,7 +121,7 @@ public class AddClass_Activity extends AppCompatActivity {
                 return "NULL";
             }
 
-            //TODO: Remove redundancy after class is tested
+
             String ExtractedPrecentFullString = HTMLAfterCheckBeforeHTML.substring(0, sizeOfHTMLAfterCheckBeforeHTML);
 
             return ExtractedPrecentFullString;

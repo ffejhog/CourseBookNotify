@@ -20,14 +20,26 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+/** The main entry point for this android app. Handles the main interface and stuff
+ * @author Jeffrey Neer
+ * @version 1.0.0
+ */
+
 public class MainActivity extends AppCompatActivity {
 
+    /** Used to determine if the network relieve function has failed */
     public boolean fail = false;
+    /** Name of the SharedPreferences database */
     public final String DATABASE = "database";
+    /** Number representing the OPEN_NEW_CLASS activity */
     static final int OPEN_NEW_CLASS = 1;
-    static final int OPEN_SETTINGS = 1;
+    /** Number representing the OPEN_SETTINGS activity */
+    static final int OPEN_SETTINGS = 2;
+    /** Create a variable for use with SharedPreferences */
     SharedPreferences database;
+    /** The array containing the list of classes to lookup */
     ArrayList<SchoolClass> schoolClasses = new ArrayList<>();
+
     private SwipeRefreshLayout mSwipeRefreshLayout;
     SchoolClass_Adapter adapter;
     static myOnClickListener myOnClickListener;
@@ -36,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); //sets the view to the main layout
+        //Code adds the appropriate stuff for the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         database = getSharedPreferences(DATABASE, 0);
@@ -188,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                     return null;
                 }
 
-                //TODO: Remove redundancy after class is tested
+
                 String ExtractedPrecentFullString = HTMLAfterCheckBeforeHTML.substring(0, sizeOfHTMLAfterCheckBeforeHTML);
 
                 updatedSchoolList.add(oldClassList.get(i));
