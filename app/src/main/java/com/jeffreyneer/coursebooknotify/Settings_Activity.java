@@ -19,7 +19,8 @@ import android.widget.TextView;
 
 
 /**
- * Created by Jeffrey Neer on 5/24/2016.
+ * Project: CourseBook Notify
+ * Author: Jeffrey Neer
  */
 public class Settings_Activity extends AppCompatActivity {
 

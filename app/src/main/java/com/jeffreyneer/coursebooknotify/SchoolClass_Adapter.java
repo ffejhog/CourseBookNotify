@@ -14,7 +14,8 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 /**
- * Created by Jeffrey Neer on 4/13/2016.
+ * Project: CourseBook Notify
+ * Author: Jeffrey Neer
  */
 public class SchoolClass_Adapter extends RecyclerView.Adapter<SchoolClass_Adapter.ViewHolder> {
     // Provide a direct reference to each of the views within a data item

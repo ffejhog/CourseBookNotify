@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 /**
- * Created by Jeffrey Neer on 8/27/2016.
+ * Project: CourseBook Notify
+ * Author: Jeffrey Neer
  */
+
 //Boot Reciever to rest alarms at boot time
 public class BootReceiver extends BroadcastReceiver {
 

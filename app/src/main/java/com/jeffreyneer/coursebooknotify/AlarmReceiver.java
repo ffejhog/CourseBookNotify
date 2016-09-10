@@ -1,7 +1,8 @@
 package com.jeffreyneer.coursebooknotify;
 
 /**
- * Created by Jeffrey Neer on 8/27/2016.
+ * Project: CourseBook Notify
+ * Author: Jeffrey Neer
  */
 
 

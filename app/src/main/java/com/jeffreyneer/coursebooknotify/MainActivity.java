@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     static myOnClickListener myOnClickListener;
     RecyclerView rvSchoolClass;
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,24 +55,25 @@ public class MainActivity extends AppCompatActivity {
         //Code adds the appropriate stuff for the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        database = getSharedPreferences(DATABASE, 0);
+        database = getSharedPreferences(DATABASE, 0); //Sets database to the correct shared preferences thing
 
-        myOnClickListener = new myOnClickListener();
+        myOnClickListener = new myOnClickListener(); //Create a new on click listener
 
         rvSchoolClass = (RecyclerView) findViewById(R.id.mainList);
 
 
-        ArrayList<SchoolClass> newschoolClasses = loadSchoolClassArray();
-        schoolClasses.clear();
-        schoolClasses.addAll(newschoolClasses);
+        ArrayList<SchoolClass> newschoolClasses = loadSchoolClassArray(); //Load the array of classes for display purposes
+        schoolClasses.clear(); //Clear the current list of school classes
+        schoolClasses.addAll(newschoolClasses); //Added the new school classes that were laoded from the database
 
-        adapter = new SchoolClass_Adapter(schoolClasses);
+        adapter = new SchoolClass_Adapter(schoolClasses); //Set the adpter to the custom adapter for the school classes
 
-        rvSchoolClass.setAdapter(adapter);
+        rvSchoolClass.setAdapter(adapter); //Set the adapter
 
 
         rvSchoolClass.setLayoutManager(new LinearLayoutManager(this));
 
+        //This stuff below handles the pull to refresh thing
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -84,12 +88,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /** Used to store the id of an object that was long held for deletion*/
     public int viewToDelete = -1;
 
+
+    /**
+     * Handles the long click action for each of the list objects. This is for determining wether a user wishes to delete the class and stuff.
+     */
     class myOnClickListener implements View.OnLongClickListener {
         @Override
         public boolean onLongClick(View v) {
-            viewToDelete = (int) v.getTag();
+            viewToDelete = (int) v.getTag(); //Get the tag of the object held down
             AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
             builder.setMessage("Do you want to delete this class?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
             return true;
@@ -98,14 +107,14 @@ public class MainActivity extends AppCompatActivity {
 
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which){
+        public void onClick(DialogInterface dialog, int which) { //Determines when dialog interface was clicked
+            switch (which){ //Checks which button was clicked.
                 case DialogInterface.BUTTON_POSITIVE:
-                    deleteClassFromDatabase(viewToDelete);
-                    viewToDelete = -1;
+                    deleteClassFromDatabase(viewToDelete); //Tells it to delete the class because the button click was positive
+                    viewToDelete = -1; //Resets variable
                     break;
 
-                case DialogInterface.BUTTON_NEGATIVE:
+                case DialogInterface.BUTTON_NEGATIVE: //Tells it to leave the class because the button click was negative
                     viewToDelete = -1;
                     break;
             }

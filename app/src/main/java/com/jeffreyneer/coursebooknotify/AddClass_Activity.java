@@ -131,7 +131,7 @@ public class AddClass_Activity extends AppCompatActivity {
         protected void onPostExecute(String result) {
 
              // txt.setText(result);
-            if(result=="NULL"){
+            if(result.equals("NULL")){
                 return;
             }
 
