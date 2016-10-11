@@ -10,6 +10,12 @@
     tools:context="com.jeffreyneer.coursebooknotify.AddClass_Activity"
     >
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="1">
+
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -25,7 +31,56 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <include layout="@layout/content_addclass"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText_school"
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:hint="@string/class_school_textfield_hint" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:id="@+id/editText_classnumber"
+                android:hint="@string/class_number_textfield_hint" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:id="@+id/editText_sectionnumber"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/section_number_textfield_hint" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_semester"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="10dp"
+                android:hint="@string/semester_textfield_hint"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_sumbit"
+                android:id="@+id/button_submitInfo"
+                android:layout_gravity="end"
+                android:onClick="searchForClassPercent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textView_PercentOutput"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+
+
 
 
 </android.support.design.widget.CoordinatorLayout>
