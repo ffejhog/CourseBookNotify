@@ -6,3 +6,5 @@ Look on the releases page for various releases of tesing versions
 
 
 You can find the (poor) javadocs for this program at http://jeffreyneer.com/CourseBookNotify/docs
+
+This code is very messy, I will clean it up when I have time. For now though, feel free to look through it. 
