@@ -123,7 +123,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(AlarmContext)
                             .setSmallIcon(R.drawable.ic_stat_name)
                             .setContentTitle("CourseBook Notify")
-                            .setContentText(result.get(i).getmSchool().toUpperCase() + " " + result.get(i).getMcNumber() + "." + result.get(i).getMcNumber() + " is now open!");
+                            .setContentText(result.get(i).getmSchool().toUpperCase() + " " + result.get(i).getMcNumber() + "." + result.get(i).getMsNumber() + " is now open!");
 
                     Intent resultIntent = new Intent(AlarmContext, MainActivity.class);
 
