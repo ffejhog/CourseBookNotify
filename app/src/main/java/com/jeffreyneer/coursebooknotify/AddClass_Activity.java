@@ -17,6 +17,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,11 +28,41 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 public class AddClass_Activity extends AppCompatActivity {
     public final String DATABASE = "database";
     public boolean fail = false;
 
+    static {
+        final TrustManager[] trustAllCertificates = new TrustManager[] {
+                new X509TrustManager() {
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null; // Not relevant.
+                    }
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        // Do nothing. Just allow them all.
+                    }
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        // Do nothing. Just allow them all.
+                    }
+                }
+        };
 
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCertificates, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +122,9 @@ public class AddClass_Activity extends AppCompatActivity {
             BufferedReader reader = null;
             StringBuilder builder = new StringBuilder();
             try {
+
             String courseDatastuff = params[0] + params[1] + "." + params[2] + "." + params[3];
-            URL url = new URL("http://coursebook.utdallas.edu/" + courseDatastuff);
+            URL url = new URL("https://coursebook.utdallas.edu/" + courseDatastuff);
 
 
 
@@ -99,6 +133,7 @@ public class AddClass_Activity extends AppCompatActivity {
                     builder.append(line.trim());
                 }
             }catch( Exception e){
+
                 return "ERROR";
             } finally {
                 if (reader != null) try {
