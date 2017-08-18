@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="semester_array_name_Codes">
+        <item>18s</item>
+        <item>17f</item>
+        <item>17u</item>
         <item>17s</item>
         <item>16f</item>
         <item>16u</item>
     </string-array>
 
     <string-array name="semester_array_names">
+        <item>Spring 2018</item>
+        <item>Fall 2017</item>
+        <item>Summer 2017</item>
         <item>Spring 2017</item>
         <item>Fall 2016</item>
         <item>Summer 2016</item>
